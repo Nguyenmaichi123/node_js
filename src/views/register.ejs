@@ -1,0 +1,71 @@
+<h2 class="text-center mb-4">Đăng ký tài khoản</h2>
+
+<form
+  action="/api/auth/register"
+  method="POST"
+  class="mx-auto"
+  style="max-width: 400px"
+  onsubmit="return validateForm()"
+>
+  <div class="mb-3">
+    <label for="username" class="form-label">Tên đăng nhập</label>
+    <input
+      type="text"
+      class="form-control"
+      id="username"
+      name="username"
+      required
+      minlength="4"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="password" class="form-label">Mật khẩu</label>
+    <input
+      type="password"
+      class="form-control"
+      id="password"
+      name="password"
+      required
+      minlength="6"
+    />
+  </div>
+
+  <div class="mb-3">
+    <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+    <input
+      type="password"
+      class="form-control"
+      id="confirmPassword"
+      name="confirmPassword"
+      required
+    />
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+</form>
+
+<script>
+  function validateForm() {
+    const pw = document.getElementById("password").value;
+    const cpw = document.getElementById("confirmPassword").value;
+    const username = document.getElementById("username").value;
+
+    if (username.length < 4) {
+      alert("Tên đăng nhập phải có ít nhất 4 ký tự.");
+      return false;
+    }
+
+    if (pw.length < 6) {
+      alert("Mật khẩu phải có ít nhất 6 ký tự.");
+      return false;
+    }
+
+    if (pw !== cpw) {
+      alert("Mật khẩu và xác nhận không khớp.");
+      return false;
+    }
+
+    return true;
+  }
+</script>

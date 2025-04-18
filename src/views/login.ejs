@@ -1,0 +1,46 @@
+<h2 class="text-center mb-4">Đăng nhập</h2>
+
+<form id="loginForm" class="mx-auto" style="max-width: 400px">
+  <div class="mb-3">
+    <label for="username" class="form-label">Tên đăng nhập</label>
+    <input type="text" class="form-control" id="username" required />
+  </div>
+
+  <div class="mb-3">
+    <label for="password" class="form-label">Mật khẩu</label>
+    <input type="password" class="form-control" id="password" required />
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+</form>
+
+<script>
+  document
+    .querySelector("#loginForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const username = document.querySelector("#username").value;
+      const password = document.querySelector("#password").value;
+
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // ✅ Lưu token vào localStorage
+        localStorage.setItem("token", data.token);
+
+        // 👉 Chuyển hướng sang trang chủ hoặc dashboard
+        window.location.href = "/";
+      } else {
+        alert(data.message || "Đăng nhập thất bại!");
+      }
+    });
+</script>

@@ -1,0 +1,22 @@
+<div class="d-flex justify-content-center align-items-center">
+  <img id="qrImage" src="" alt="QR Code thanh toán" class="text-center" />
+</div>
+<script>
+  async function generateQR() {
+    const res = await fetch("/api/cart/payment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: 100000 }),
+    });
+
+    const data = await res.json();
+    document.getElementById("qrImage").src = data.qrCode;
+
+    setTimeout(() => {
+      alert("Cảm ơn bạn đã mua hàng!");
+      window.location.href = "/";
+    }, 3000);
+  }
+
+  generateQR();
+</script>

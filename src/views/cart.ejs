@@ -1,0 +1,86 @@
+<h2 class="text-center mb-4">Giỏ hàng của bạn</h2>
+<div id="cartContainer">
+  <p>Đang tải giỏ hàng...</p>
+</div>
+
+<script>
+  async function loadCart() {
+    const res = await fetch("/api/cart");
+    const cart = await res.json();
+
+    const container = document.getElementById("cartContainer");
+
+    if (!cart.length) {
+      container.innerHTML = "<p>Giỏ hàng trống.</p>";
+      return;
+    }
+
+    let html = `
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+    let totalPrice = 0;
+    cart.forEach((item) => {
+      const itemTotal = item.price * item.quantity;
+      totalPrice += itemTotal;
+      html += `
+        <tr>
+          <td>${item.name}</td>
+              <td>${item.price.toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND",
+              })}</td>
+          <td>${item.quantity}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" onclick="removeItem('${
+              item._id
+            }')">Xoá</button>
+          </td>
+        </tr>
+      `;
+    });
+
+    html += `
+        </tbody>
+      </table>
+      <button class="btn btn-warning " onclick="clearCart()">Xoá toàn bộ giỏ hàng</button>
+    `;
+
+    html += `
+<div class="text-end  me-5">
+    <strong>Tổng tiền: ${totalPrice.toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    })}</strong>
+      <a href="/payment" class="btn btn-primary ms-3">thanh toán</a> 
+  </div>
+  
+   `;
+
+    container.innerHTML = html;
+  }
+
+  async function removeItem(_id) {
+    await fetch("/api/cart/remove", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ _id }),
+    });
+    loadCart();
+  }
+
+  async function clearCart() {
+    await fetch("/api/cart/clear", { method: "POST" });
+    loadCart();
+  }
+
+  loadCart(); // gọi khi mở trang
+</script>
